@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Banking Application - Technical Architecture & Interview Guide</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 1.4cm 1.3cm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      color: #1e293b;
+      background: #ffffff;
+      line-height: 1.5;
+      font-size: 9.5pt;
+    }
+    .header-banner {
+      border-bottom: 2.5px solid #635bff;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .brand-title {
+      font-size: 19pt;
+      font-weight: 800;
+      color: #0a2540;
+      letter-spacing: -0.02em;
+    }
+    .brand-sub {
+      font-size: 9.5pt;
+      color: #635bff;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .meta-info {
+      text-align: right;
+      font-size: 8.2pt;
+      color: #64748b;
+    }
+    h2 {
+      font-size: 11.5pt;
+      font-weight: 800;
+      color: #0a2540;
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 4px;
+      margin-top: 14px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    h3 {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+    p {
+      margin-bottom: 6px;
+    }
+    .pitch-box {
+      background: #f8faff;
+      border: 1.5px solid #c7d2fe;
+      border-left: 4px solid #635bff;
+      border-radius: 6px;
+      padding: 9px 12px;
+      margin-bottom: 12px;
+      font-size: 9.2pt;
+      color: #1e1b4b;
+    }
+    .hero-callout {
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      border-left: 4px solid #f59e0b;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin: 8px 0;
+      font-size: 8.8pt;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0 10px;
+      font-size: 8.5pt;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 5px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    .mono {
+      font-family: 'Consolas', 'Courier New', monospace;
+      background: #f1f5f9;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 8.2pt;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    ul, ol {
+      margin-left: 16px;
+      margin-bottom: 6px;
+    }
+    li {
+      margin-bottom: 2px;
+      font-size: 8.8pt;
+    }
+    .qa-box {
+      margin-bottom: 8px;
+      background: #fafafa;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 7px 11px;
+      page-break-inside: avoid;
+    }
+    .qa-q {
+      font-weight: 800;
+      color: #0a2540;
+      font-size: 9pt;
+      margin-bottom: 3px;
+    }
+    .qa-a {
+      color: #334155;
+      font-size: 8.5pt;
+      line-height: 1.45;
+    }
+
+    /* ARCHITECTURE BLUEPRINT STYLING */
+    .arch-container {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin: 10px 0 14px;
+    }
+    .arch-tier {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 7px 12px;
+      background: #ffffff;
+      position: relative;
+    }
+    .arch-tier-title {
+      font-size: 8.2pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .arch-tier-1 { border-left: 4px solid #0ea5e9; background: #f0f9ff; }
+    .arch-tier-1 .arch-tier-title { color: #0284c7; }
+    .arch-tier-2 { border-left: 4px solid #635bff; background: #f5f3ff; }
+    .arch-tier-2 .arch-tier-title { color: #5b21b6; }
+    .arch-tier-3 { border-left: 4px solid #10b981; background: #ecfdf5; }
+    .arch-tier-3 .arch-tier-title { color: #065f46; }
+    .arch-tier-4 { border-left: 4px solid #f59e0b; background: #fffbeb; }
+    .arch-tier-4 .arch-tier-title { color: #b45309; }
+    .arch-tier-5 { border-left: 4px solid #64748b; background: #f8fafc; }
+    .arch-tier-5 .arch-tier-title { color: #334155; }
+
+    .arch-components {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .arch-comp-card {
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      padding: 4px 7px;
+      font-size: 7.8pt;
+    }
+    .arch-comp-card strong {
+      display: block;
+      color: #0f172a;
+      font-size: 8pt;
+      margin-bottom: 1px;
+    }
+
+    .flow-arrow {
+      text-align: center;
+      color: #64748b;
+      font-weight: 800;
+      font-size: 9pt;
+      line-height: 1;
+      margin: -2px 0;
+    }
+
+    /* PIPELINE DIAGRAM */
+    .pipeline-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-family: 'Consolas', monospace;
+      font-size: 7.8pt;
+      margin: 8px 0 12px;
+      line-height: 1.45;
+    }
+    .pipeline-highlight {
+      color: #38bdf8;
+      font-weight: 700;
+    }
+    .pipeline-accent {
+      color: #a78bfa;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header-banner">
+    <div>
+      <div class="brand-title">🏛️ Backend Banking & Clearing Engine</div>
+      <div class="brand-sub">Comprehensive System Architecture & Technical Interview Guide</div>
+    </div>
+    <div class="meta-info">
+      <strong>Devika Mane</strong><br>
+      GitHub: github.com/developer852/banking-application<br>
+      Stack: Spring Boot 3.3 • Java 17 • Hibernate • MySQL 8 • Docker
+    </div>
+  </div>
+
+  <!-- SECTION 1: ELEVATOR PITCH -->
+  <h2>1. The 30-Second Elevator Pitch</h2>
+  <div class="pitch-box">
+    <strong>Word-for-word interview opening statement:</strong><br>
+    <em>"I engineered a production-grade <strong>Backend Banking & Settlement System</strong> using <strong>Java 17, Spring Boot 3, Hibernate/JPA, and MySQL</strong>, containerized with <strong>Docker</strong>.<br>
+    The system handles the entire customer and account lifecycle: onboarding, 10-digit account generation, deposits, withdrawals, and inter-bank transfers.<br>
+    The key architectural highlight is how we achieved <strong>strict ACID consistency and zero-deadlock concurrency</strong>: using <strong>pessimistic write locking</strong> paired with a <strong>deterministic lock-ordering algorithm</strong> to completely eliminate race conditions and double-spending during simultaneous transfers. I also authored automated Postman test suites and built a Stripe/JPMorgan-style institutional dashboard on top of the REST APIs."</em>
+  </div>
+
+  <!-- SECTION 2: SYSTEM ARCHITECTURE BLUEPRINT -->
+  <h2>2. End-to-End System Architecture</h2>
+  <p>The system is architected as an enterprise multi-tier decoupled system following Clean Architecture and Domain-Driven Design principles:</p>
+
+  <div class="arch-container">
+    <!-- TIER 1: CLIENT & GATEWAY -->
+    <div class="arch-tier arch-tier-1">
+      <div class="arch-tier-title">
+        <span>Tier 1: Client & Presentation Tier</span>
+        <span>HTTP / JSON REST</span>
+      </div>
+      <div class="arch-components">
+        <div class="arch-comp-card">
+          <strong>Institutional Web Portal</strong>
+          Stripe/JPMorgan-inspired operations dashboard with animated RTGS visualizer.
+        </div>
+        <div class="arch-comp-card">
+          <strong>OpenAPI / Swagger UI</strong>
+          Interactive API contract explorer at <span class="mono">/swagger-ui.html</span>.
+        </div>
+        <div class="arch-comp-card">
+          <strong>Postman Automated Suite</strong>
+          Chained integration tests with JSON assertion scripts and environment vars.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">▼ &nbsp; JSON Payloads & HTTP Status Codes &nbsp; ▼</div>
+
+    <!-- TIER 2: WEB / CONTROLLER TIER -->
+    <div class="arch-tier arch-tier-2">
+      <div class="arch-tier-title">
+        <span>Tier 2: Web & Controller Tier (Spring MVC)</span>
+        <span>Validation & Error Handling</span>
+      </div>
+      <div class="arch-components">
+        <div class="arch-comp-card">
+          <strong>REST Controllers</strong>
+          <span class="mono">UserController</span>, <span class="mono">AccountController</span>, <span class="mono">TransactionController</span>.
+        </div>
+        <div class="arch-comp-card">
+          <strong>Jakarta Bean Validation</strong>
+          DTO input filters (<span class="mono">@Valid</span>, <span class="mono">@DecimalMin</span>, <span class="mono">@Email</span>, <span class="mono">@NotBlank</span>).
+        </div>
+        <div class="arch-comp-card">
+          <strong>Global Exception Handler</strong>
+          <span class="mono">@RestControllerAdvice</span> mapping exceptions to RFC 7807 error schema.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">▼ &nbsp; Strong DTO Models & Service Invocation &nbsp; ▼</div>
+
+    <!-- TIER 3: BUSINESS & TRANSACTION ENGINE -->
+    <div class="arch-tier arch-tier-3">
+      <div class="arch-tier-title">
+        <span>Tier 3: Business Logic & Transaction Engine</span>
+        <span>Spring Transaction Manager</span>
+      </div>
+      <div class="arch-components">
+        <div class="arch-comp-card">
+          <strong>Account & User Engine</strong>
+          Collision-free 10-digit number generation & duplicate email deduplication.
+        </div>
+        <div class="arch-comp-card">
+          <strong>Deadlock-Free Lock Sorter</strong>
+          Deterministic account ID comparison ensuring circular wait cannot occur.
+        </div>
+        <div class="arch-comp-card">
+          <strong>ACID Boundary Coordinator</strong>
+          <span class="mono">@Transactional(isolation = READ_COMMITTED)</span> with automated rollback.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">▼ &nbsp; Hibernate ORM & Row-Level Pessimistic Locks &nbsp; ▼</div>
+
+    <!-- TIER 4: PERSISTENCE TIER -->
+    <div class="arch-tier arch-tier-4">
+      <div class="arch-tier-title">
+        <span>Tier 4: Persistence & Data Access (Spring Data JPA)</span>
+        <span>Hibernate 6 ORM</span>
+      </div>
+      <div class="arch-components">
+        <div class="arch-comp-card">
+          <strong>Pessimistic Repositories</strong>
+          <span class="mono">@Lock(PESSIMISTIC_WRITE)</span> executing <span class="mono">SELECT ... FOR UPDATE</span>.
+        </div>
+        <div class="arch-comp-card">
+          <strong>JPA Auditing Listeners</strong>
+          <span class="mono">@EnableJpaAuditing</span> auto-populating <span class="mono">createdAt</span> and <span class="mono">updatedAt</span>.
+        </div>
+        <div class="arch-comp-card">
+          <strong>Optimistic Audit Version</strong>
+          <span class="mono">@Version</span> attribute tracking entity revision states.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">▼ &nbsp; JDBC Connection Pool (HikariCP) &nbsp; ▼</div>
+
+    <!-- TIER 5: DATABASE & CONTAINER INFRASTRUCTURE -->
+    <div class="arch-tier arch-tier-5">
+      <div class="arch-tier-title">
+        <span>Tier 5: Database & Infrastructure Tier</span>
+        <span>Docker & MySQL 8</span>
+      </div>
+      <div class="arch-components">
+        <div class="arch-comp-card">
+          <strong>Production MySQL 8.0</strong>
+          InnoDB engine with row-level locks and persistent volume (<span class="mono">mysql-data</span>).
+        </div>
+        <div class="arch-comp-card">
+          <strong>In-Memory H2 Engine</strong>
+          Zero-dependency local development and sub-second integration tests.
+        </div>
+        <div class="arch-comp-card">
+          <strong>Docker Compose Network</strong>
+          Isolated bridge network with <span class="mono">mysqladmin ping</span> healthcheck orchestration.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: DATABASE ER ARCHITECTURE -->
+  <h2>3. Database Entity-Relationship (ER) Architecture</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 18%;">Entity Table</th>
+        <th style="width: 32%;">Key Attributes & Constraints</th>
+        <th style="width: 25%;">Relationships</th>
+        <th style="width: 25%;">Indexes & Performance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>USERS</strong><br><span class="mono">users</span></td>
+        <td><span class="mono">id</span> (PK, Auto-inc)<br><span class="mono">email</span> (Unique, Not Null)<br><span class="mono">first_name</span>, <span class="mono">last_name</span>, <span class="mono">phone_number</span></td>
+        <td><strong>1 to Many</strong> with <span class="mono">accounts</span> (<span class="mono">cascade = ALL</span>, lazy loaded).</td>
+        <td>Unique index on <span class="mono">email</span>. Primary key clustered index.</td>
+      </tr>
+      <tr>
+        <td><strong>ACCOUNTS</strong><br><span class="mono">accounts</span></td>
+        <td><span class="mono">id</span> (PK)<br><span class="mono">account_number</span> (Unique, 10-char)<br><span class="mono">account_type</span> (SAVINGS/CHECKING)<br><span class="mono">balance</span> (NUMERIC 19,4)<br><span class="mono">status</span> (ACTIVE/SUSPENDED/CLOSED)<br><span class="mono">version</span> (Long)</td>
+        <td><strong>Many to 1</strong> with <span class="mono">users</span> (FK: <span class="mono">user_id</span>).<br><strong>1 to Many</strong> with <span class="mono">transactions</span>.</td>
+        <td>Unique index on <span class="mono">account_number</span>. Row-level locks placed on <span class="mono">id</span> and <span class="mono">account_number</span>.</td>
+      </tr>
+      <tr>
+        <td><strong>TRANSACTIONS</strong><br><span class="mono">transactions</span></td>
+        <td><span class="mono">id</span> (PK)<br><span class="mono">transaction_reference</span> (Unique UUID)<br><span class="mono">transaction_type</span> (DEPOSIT/WITHDRAWAL/TRANSFER)<br><span class="mono">amount</span>, <span class="mono">balance_after</span> (NUMERIC 19,4)<br><span class="mono">timestamp</span> (UTC Timestamp)</td>
+        <td><strong>Many to 1</strong> with source <span class="mono">accounts</span>.<br><strong>Many to 1</strong> with destination <span class="mono">accounts</span>.</td>
+        <td>Unique index on <span class="mono">transaction_reference</span>.<br>Foreign key indexes on <span class="mono">source_account_id</span> and <span class="mono">target_account_id</span>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- PAGE BREAK FOR CLEAN PRINTING -->
+  <div class="page-break"></div>
+
+  <!-- SECTION 4: CONCURRENCY PIPELINE -->
+  <h2>4. The Concurrency & Deadlock-Free Transfer Pipeline</h2>
+  <div class="hero-callout">
+    <strong>Interview Goldmine:</strong> Interviewers frequently probe: <em>"What happens if User 1 transfers from A ➔ B while User 2 transfers from B ➔ A at the same millisecond?"</em>
+  </div>
+
+  <div class="pipeline-box">
+<span class="pipeline-highlight">[STEP 1: INGESTION]</span>  TransferRequest arrives: Source="ACC-A", Target="ACC-B", Amount=$500
+           │
+<span class="pipeline-highlight">[STEP 2: PRE-CHECK]</span>  Validate Source != Target (reject identical account transfers)
+           │
+<span class="pipeline-highlight">[STEP 3: ID LOOKUP]</span>  Read Account IDs without lock: ID(A)=101, ID(B)=205
+           │
+<span class="pipeline-accent">[STEP 4: DETERMINISTIC ORDERING STRATEGY]</span>
+           │  Compare primary keys numerically: (101 < 205)
+           │  Always acquire lock on MIN(ID) first, then MAX(ID) second!
+           │
+<span class="pipeline-highlight">[STEP 5: PESSIMISTIC LOCK ROW 1]</span>  SELECT * FROM accounts WHERE id = 101 FOR UPDATE;
+           │  ──> Database locks Account 101 row exclusively
+           │
+<span class="pipeline-highlight">[STEP 6: PESSIMISTIC LOCK ROW 2]</span>  SELECT * FROM accounts WHERE id = 205 FOR UPDATE;
+           │  ──> Database locks Account 205 row exclusively
+           │
+<span class="pipeline-highlight">[STEP 7: VALIDATE PRECONDITIONS]</span>
+           │  • Assert Account A is ACTIVE and Account B is ACTIVE
+           │  • Assert Account A Balance ($1,200) >= Transfer Amount ($500)
+           │
+<span class="pipeline-highlight">[STEP 8: ATOMIC MUTATIONS]</span>
+           │  • Account A: $1,200 - $500 = $700.00
+           │  • Account B: $300 + $500 = $800.00
+           │  • Save both accounts to persistence context
+           │
+<span class="pipeline-highlight">[STEP 9: IMMUTABLE AUDIT LOG]</span>
+           │  • Insert Transaction record (Ref: "TRF-8F2B9C...", Post-Balance: $700.00)
+           │
+<span class="pipeline-highlight">[STEP 10: COMMIT & RELEASE]</span>
+              Transaction commits: DB writes changes, releases row locks, returns HTTP 200 OK
+  </div>
+
+  <p><strong>Why Deadlocks are Physically Impossible:</strong> In an opposing transfer (B ➔ A), the algorithm also identifies that <span class="mono">ID(A)=101 < ID(B)=205</span>, so it also attempts to lock Account 101 first. Since both threads lock in identical sequence, circular waiting is eliminated — the second thread simply waits cleanly for the first thread to commit.</p>
+
+  <!-- SECTION 5: FREQUENT INTERVIEW QUESTIONS & ANSWERS -->
+  <h2>5. Core Technical Interview Q&A</h2>
+
+  <div class="qa-box">
+    <div class="qa-q">Q1: Why did you choose Pessimistic Locking over Optimistic Locking for transfers?</div>
+    <div class="qa-a">
+      <em>"Optimistic locking (<span class="mono">@Version</span>) works best in read-heavy applications with low contention because it detects conflicts late and throws an <span class="mono">OptimisticLockException</span>. In high-velocity financial systems, however, failing transactions and forcing clients to retry degrades throughput and user experience. Pessimistic write locking queues transactions at the database row level, guaranteeing deterministic, zero-retry completion."</em>
+    </div>
+  </div>
+
+  <div class="qa-box">
+    <div class="qa-q">Q2: How is exception handling and input validation architected?</div>
+    <div class="qa-a">
+      <em>"We created a centralized <span class="mono">GlobalExceptionHandler</span> annotated with <span class="mono">@RestControllerAdvice</span>. It catches domain exceptions like <span class="mono">InsufficientBalanceException</span> (400), <span class="mono">ResourceNotFoundException</span> (404), and <span class="mono">DuplicateResourceException</span> (409), converting them into uniform JSON responses. We also capture <span class="mono">MethodArgumentNotValidException</span> to extract field-level validation errors into a structured error map."</em>
+    </div>
+  </div>
+
+  <div class="qa-box">
+    <div class="qa-q">Q3: How is the application containerized and deployed?</div>
+    <div class="qa-a">
+      <em>"We implemented a multi-stage <span class="mono">Dockerfile</span>. Stage 1 compiles the application using Maven and Java 17. Stage 2 copies only the production JAR into an Alpine JRE image running under a dedicated non-root user. Our <span class="mono">docker-compose.yml</span> orchestrates the Spring Boot service alongside MySQL 8, with persistent volumes and health checks (<span class="mono">mysqladmin ping</span>) ensuring clean startup order."</em>
+    </div>
+  </div>
+
+  <div class="qa-box">
+    <div class="qa-q">Q4: How did you test and verify endpoint contracts?</div>
+    <div class="qa-a">
+      <em>"We have two comprehensive testing suites: (1) JUnit 5 and Spring MockMvc integration tests that execute the full flow from customer creation to transfer assertion, and (2) an automated Postman Collection that chains requests using dynamic environment variables and validates HTTP status codes and JSON schema integrity."</em>
+    </div>
+  </div>
+
+  <!-- SECTION 6: QUICK REFERENCE CHEAT SHEET -->
+  <h2>6. Quick Reference Cheat Sheet</h2>
+  <table>
+    <tbody>
+      <tr>
+        <td style="width: 28%;"><strong>Core Tech Stack</strong></td>
+        <td>Java 17 LTS, Spring Boot 3.3.4, Hibernate 6, MySQL 8.0, H2 In-Memory, Docker, Docker Compose, Postman, Swagger/OpenAPI 3.</td>
+      </tr>
+      <tr>
+        <td><strong>Key Engineering Concepts</strong></td>
+        <td>ACID Transactions, Pessimistic Locking (<span class="mono">SELECT FOR UPDATE</span>), Deterministic Lock Ordering, Global Exception Handling (<span class="mono">@RestControllerAdvice</span>), Multi-Stage Containerization.</td>
+      </tr>
+      <tr>
+        <td><strong>Live Endpoints</strong></td>
+        <td>Web Portal: <span class="mono">http://localhost:8080/</span> | Swagger UI: <span class="mono">/swagger-ui.html</span> | H2 Console: <span class="mono">/h2-console</span></td>
+      </tr>
+      <tr>
+        <td><strong>Public GitHub Repo</strong></td>
+        <td><a href="https://github.com/developer852/banking-application">https://github.com/developer852/banking-application</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>

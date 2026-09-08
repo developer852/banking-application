@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Global Financial • Institutional Banking & Clearing Infrastructure</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --stripe-purple: #635bff;
+      --stripe-purple-hover: #534be7;
+      --stripe-dark: #0a2540;
+      --stripe-cyan: #00d4ff;
+      --stripe-orange: #ff5900;
+      --stripe-pink: #ff2d87;
+      --bg-white: #ffffff;
+      --bg-slate: #f6f9fc;
+      --text-heading: #0a2540;
+      --text-body: #425466;
+      --text-muted: #62788d;
+      --border-subtle: #e6ebf1;
+      --border-focus: #635bff;
+      --success-green: #00875a;
+      --success-bg: #e3fcef;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-white);
+      color: var(--text-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* TOP GLOBAL NOTIFICATION TICKER */
+    .fedwire-ticker {
+      background: #06152b;
+      color: #94a3b8;
+      font-size: 0.72rem;
+      padding: 0.45rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #142847;
+      font-weight: 500;
+    }
+
+    .ticker-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-dot-pulse {
+      position: relative;
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+    }
+
+    .status-dot-pulse::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      width: 13px;
+      height: 13px;
+      border: 1.5px solid #10b981;
+      border-radius: 50%;
+      animation: pulseRing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.6); opacity: 0.9; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    /* MAIN NAVIGATION (Stripe Style) */
+    nav.stripe-nav {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 100;
+      padding: 0.9rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: var(--text-heading);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #0a2540 0%, #635bff 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(10, 37, 64, 0.2);
+    }
+
+    .brand-text {
+      font-size: 1.18rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-heading);
+    }
+
+    .brand-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #00875a;
+      background: var(--success-bg);
+      padding: 2px 7px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      margin-left: 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      list-style: none;
+    }
+
+    .nav-link-item {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-body);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .nav-link-item:hover {
+      color: var(--stripe-purple);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s var(--ease-spring);
+      border: none;
+      user-select: none;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-heading);
+    }
+
+    .btn-ghost:hover {
+      color: var(--stripe-purple);
+    }
+
+    .btn-primary {
+      background-color: var(--stripe-purple);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(99, 91, 255, 0.35);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--stripe-purple-hover);
+      box-shadow: 0 6px 20px rgba(99, 91, 255, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-dark {
+      background-color: #0a2540;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(10, 37, 64, 0.25);
+    }
+
+    .btn-dark:hover {
+      background-color: #12375d;
+      transform: translateY(-1px);
+    }
+
+    /* HERO SECTION WITH STRIPE-EXACT IRIDESCENT GRADIENT WAVES */
+    .hero-section {
+      position: relative;
+      padding: 4.5rem 2.5rem 5.5rem;
+      max-width: 1320px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    /* THE ICONIC STRIPE BACKGROUND MESH */
+    .gradient-ribbon-bg {
+      position: absolute;
+      top: -120px;
+      right: -80px;
+      width: 780px;
+      height: 720px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.95;
+      overflow: hidden;
+      transform: skewY(-8deg);
+      border-radius: 40px;
+    }
+
+    .gradient-mesh {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        135deg,
+        #ff5900 0%,
+        #ff2d87 25%,
+        #635bff 55%,
+        #00d4ff 85%,
+        #ff5900 100%
+      );
+      background-size: 300% 300%;
+      animation: gradientFlow 12s ease-in-out infinite alternate;
+      filter: blur(55px);
+      opacity: 0.88;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 50% 100%; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .gdp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #0a2540;
+      margin-bottom: 1.5rem;
+    }
+
+    .gdp-badge span.rate {
+      color: #635bff;
+      font-family: 'JetBrains Mono', monospace;
+      background: #f4f3ff;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid #dcd9fe;
+    }
+
+    .hero-title {
+      font-size: 3.65rem;
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      color: #0a2540;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title .gradient-text-1 {
+      background: linear-gradient(90deg, #635bff 0%, #00d4ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title .gradient-text-2 {
+      background: linear-gradient(90deg, #ff2d87 0%, #ff5900 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.18rem;
+      line-height: 1.6;
+      color: #425466;
+      max-width: 580px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* INSTITUTIONAL CLIENT LOGOS BAR */
+    .client-strip {
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      background: #fcfdfe;
+      padding: 1.75rem 2.5rem;
+      text-align: center;
+    }
+
+    .client-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94a3b8;
+      margin-bottom: 1.25rem;
+    }
+
+    .client-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3.5rem;
+      flex-wrap: wrap;
+    }
+
+    .client-logo-item {
+      font-size: 1.08rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .client-logo-item:hover {
+      color: #0a2540;
+    }
+
+    /* LIVE CLEARING & TREASURY PORTAL SECTION */
+    .portal-section {
+      background-color: var(--bg-slate);
+      padding: 4.5rem 2.5rem 6rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .section-container {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .section-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* METRICS STRIP */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 5px rgba(10, 37, 64, 0.04);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s var(--ease-spring);
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(10, 37, 64, 0.08);
+    }
+
+    .metric-card.accent-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #635bff, #00d4ff);
+    }
+
+    .metric-label {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .metric-value {
+      font-size: 1.95rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.025em;
+      margin-top: 0.5rem;
+    }
+
+    .metric-sub {
+      font-size: 0.78rem;
+      color: #64748b;
+      margin-top: 0.4rem;
+    }
+
+    /* INTER-BANK SETTLEMENT PIPELINE VISUALIZER (JPMorgan/BNY Mellon Style) */
+    .settlement-terminal {
+      background: #0a2540;
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      color: white;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 20px 40px -10px rgba(10, 37, 64, 0.4);
+      border: 1px solid #193a5e;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
+      border-bottom: 1px solid #1b3d63;
+      padding-bottom: 1rem;
+    }
+
+    .terminal-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nodes-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .node-box {
+      background: #0f3054;
+      border: 1px solid #234b77;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      transition: all 0.3s;
+    }
+
+    .node-box.highlight {
+      border-color: #00d4ff;
+      box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
+    }
+
+    .node-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #38bdf8;
+      text-transform: uppercase;
+    }
+
+    .node-inst {
+      font-size: 1.02rem;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .node-acc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .node-bal {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #34d399;
+      margin-top: 8px;
+    }
+
+    .pipe-channel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 140px;
+    }
+
+    .pipe-line {
+      width: 100%;
+      height: 4px;
+      background: #20456d;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pipe-pulse {
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 45px;
+      height: 8px;
+      background: linear-gradient(90deg, transparent, #00d4ff, #635bff, transparent);
+      border-radius: 4px;
+      animation: pipeFlow 2.2s linear infinite;
+    }
+
+    @keyframes pipeFlow {
+      0% { left: -45px; }
+      100% { left: 100%; }
+    }
+
+    /* WORKSPACE TABS & DATA GRIDS */
+    .operations-card {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(10, 37, 64, 0.04);
+      overflow: hidden;
+    }
+
+    .tabs-header {
+      display: flex;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #fafbfd;
+      padding: 0 1.5rem;
+      gap: 1rem;
+    }
+
+    .tab-trigger {
+      background: none;
+      border: none;
+      padding: 1.15rem 1rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.15s;
+    }
+
+    .tab-trigger:hover {
+      color: var(--text-heading);
+    }
+
+    .tab-trigger.active {
+      color: var(--stripe-purple);
+    }
+
+    .tab-trigger.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--stripe-purple);
+      border-radius: 3px 3px 0 0;
+    }
+
+    .tab-body {
+      padding: 1.75rem 2rem;
+      display: none;
+    }
+
+    .tab-body.active {
+      display: block;
+      animation: fadeIn 0.25s var(--ease-spring);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* DATA TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #fafbfd;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.95rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-heading);
+    }
+
+    tbody tr:hover td {
+      background-color: #fbfcfe;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 9999px;
+    }
+
+    .status-badge.active {
+      background: #e3fcef;
+      color: #00875a;
+    }
+
+    .status-badge.savings {
+      background: #eff8ff;
+      color: #175cd3;
+    }
+
+    .status-badge.checking {
+      background: #fffaeb;
+      color: #b54708;
+    }
+
+    /* FORM STYLING */
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.7rem 0.95rem;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text-heading);
+      background: #ffffff;
+      outline: none;
+      transition: all 0.18s;
+    }
+
+    .form-control:focus {
+      border-color: var(--stripe-purple);
+      box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.18);
+    }
+
+    /* COPY CHIP */
+    .copy-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 2px 7px;
+      border-radius: 5px;
+      transition: background 0.15s;
+    }
+
+    .copy-chip:hover {
+      background: #eef2f6;
+      color: var(--stripe-purple);
+    }
+
+    /* TOAST */
+    #toast-shelf {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      z-index: 9999;
+    }
+
+    .toast-msg {
+      background: #0a2540;
+      color: #ffffff;
+      padding: 0.9rem 1.4rem;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      box-shadow: 0 12px 30px rgba(10, 37, 64, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-left: 4px solid var(--stripe-purple);
+      animation: toastIn 0.25s var(--ease-spring);
+    }
+
+    .toast-msg.error {
+      border-left-color: #ef4444;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateX(30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP FEDWIRE TICKER -->
+  <div class="fedwire-ticker">
+    <div class="ticker-left">
+      <div class="status-dot-pulse"></div>
+      <span>FEDWIRE & SWIFT INTER-BANK SETTLEMENT NETWORK: <strong>OPERATIONAL (RTGS FINALITY)</strong></span>
+      <span>•</span>
+      <span>ACID CONCURRENCY: <strong>DETERMINISTIC PESSIMISTIC LOCKING ACTIVE</strong></span>
+    </div>
+    <div class="mono" style="color: #38bdf8;">
+      SYSTEM RESERVES: $14,850,290,000.00 USD
+    </div>
+  </div>
+
+  <!-- NAVIGATION BAR (Stripe Layout) -->
+  <nav class="stripe-nav">
+    <a href="#" class="nav-brand">
+      <div class="brand-mark">A</div>
+      <div>
+        <div style="display:flex; align-items:center;">
+          <span class="brand-text">apex</span>
+          <span class="brand-badge">Institutional</span>
+        </div>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li class="nav-link-item" onclick="scrollToSection('portal-view')">Treasury Clearing</li>
+      <li class="nav-link-item" onclick="scrollToSection('portal-view')">Liquidity Vaults</li>
+      <li class="nav-link-item" onclick="scrollToSection('portal-view')">Corporate Accounts</li>
+      <li class="nav-link-item" onclick="scrollToSection('portal-view')">Audit Ledger</li>
+      <li><a href="/swagger-ui.html" target="_blank" class="nav-link-item" style="text-decoration:none;">Developers (API)</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="/swagger-ui.html" target="_blank" class="btn btn-ghost">API Spec</a>
+      <a href="/h2-console" target="_blank" class="btn btn-ghost">Database</a>
+      <button class="btn btn-primary" onclick="scrollToSection('portal-view')">
+        Access Portal ➔
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION WITH VIBRANT IRIDESCENT STRIPE WAVES -->
+  <section class="hero-section">
+    <!-- Flowing Multi-Color Gradient Mesh in background -->
+    <div class="gradient-ribbon-bg">
+      <div class="gradient-mesh"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="gdp-badge">
+        Global Inter-Bank Volume Settled: <span class="rate">3.189420%</span>
+      </div>
+
+      <h1 class="hero-title">
+        Financial infrastructure to power <span class="gradient-text-1">Tier-1 banking.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Engineered for global institutions, central clearance pools, and high-velocity treasury systems. Experience strict ACID transaction consistency, deadlock-free deterministic pessimistic locking, and instant cross-bank settlement.
+      </p>
+
+      <div class="hero-cta-group">
+        <button class="btn btn-primary" style="padding: 0.85rem 1.65rem; font-size: 0.96rem;" onclick="runInstitutionalSimulation()">
+          ⚡ Run Inter-Bank Settlement Demo
+        </button>
+        <button class="btn btn-dark" style="padding: 0.85rem 1.5rem; font-size: 0.96rem;" onclick="scrollToSection('portal-view')">
+          Launch Operations Console ➔
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Side Hero Illustration / Mini Terminal Preview -->
+    <div style="position: relative; z-index: 2;">
+      <div style="background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.7); border-radius: 20px; padding: 2rem; box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #635bff;">Real-Time Liquidity Stream</div>
+          <span class="status-badge active"><span class="status-dot-pulse" style="width:5px;height:5px;"></span> ISO 20022</span>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <div style="font-size: 0.8rem; font-weight: 600; color: #64748b;">TOTAL INSTITUTIONAL POOL</div>
+          <div class="mono" style="font-size: 2.2rem; font-weight: 800; color: #0a2540;" id="hero-vault-balance">$0.00</div>
+          <div style="font-size: 0.78rem; color: #00875a; font-weight: 600; margin-top: 4px;">↑ +14.8% settlement capacity vs prior day</div>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 12px; padding: 1rem 1.25rem; border: 1px solid var(--border-subtle);">
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: #64748b; margin-bottom: 6px;">
+            <span>Consensus Latency</span>
+            <span class="mono" style="font-weight: 700; color: #0a2540;">14ms</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: #64748b; margin-bottom: 6px;">
+            <span>Lock Ordering Strategy</span>
+            <span class="mono" style="font-weight: 700; color: #635bff;">Deterministic ASC</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: #64748b;">
+            <span>Transaction Isolation</span>
+            <span class="mono" style="font-weight: 700; color: #00875a;">READ_COMMITTED + PESSIMISTIC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTITUTIONAL CLIENT TRUST STRIP (JPMorgan, BNY Mellon, HSBC, etc.) -->
+  <section class="client-strip">
+    <div class="client-label">Trusted By Tier-1 Global Clearing Members & Custodians</div>
+    <div class="client-logos">
+      <div class="client-logo-item">🏛️ J.P. MORGAN</div>
+      <div class="client-logo-item">🏦 BNY MELLON</div>
+      <div class="client-logo-item">🌐 HSBC GLOBAL</div>
+      <div class="client-logo-item">📈 GOLDMAN SACHS</div>
+      <div class="client-logo-item">🏢 BARCLAYS</div>
+      <div class="client-logo-item">🏛️ CITIGROUP</div>
+    </div>
+  </section>
+
+  <!-- OPERATIONS CONSOLE & TREASURY WORKSPACE -->
+  <section class="portal-section" id="portal-view">
+    <div class="section-container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Institutional Operations Portal</h2>
+          <p class="section-subtitle">Real-time custody management, cross-account settlement, and regulatory audit</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-dark" onclick="openOnboardModal()">+ Onboard Institutional Entity</button>
+          <button class="btn btn-primary" onclick="openAccountModal()">+ Open Custody Account</button>
+        </div>
+      </div>
+
+      <!-- METRIC STRIP -->
+      <div class="metrics-grid">
+        <div class="metric-card accent-card">
+          <div class="metric-label">
+            <span>Total Custody Balance</span>
+            <span class="status-badge active">Live Vault</span>
+          </div>
+          <div class="metric-value mono" id="stat-vault">$0.00</div>
+          <div class="metric-sub">Across all institutional ledger accounts</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">
+            <span>Active Bank Accounts</span>
+            <span class="status-badge savings" id="stat-acc-badge">0 Accounts</span>
+          </div>
+          <div class="metric-value" id="stat-acc-count">0</div>
+          <div class="metric-sub">Savings & Operational Checking</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">
+            <span>Onboarded Entities</span>
+            <span class="status-badge active">KYC Verified</span>
+          </div>
+          <div class="metric-value" id="stat-user-count">0</div>
+          <div class="metric-sub">Institutional clearing members</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">
+            <span>Deadlock Resilience</span>
+            <span class="status-badge checking">Zero-Deadlock</span>
+          </div>
+          <div class="metric-value" style="font-size: 1.35rem; color: #635bff; margin-top: 0.8rem;">Deterministic Lock</div>
+          <div class="metric-sub">Ordered Pessimistic Locking</div>
+        </div>
+      </div>
+
+      <!-- INTER-BANK SETTLEMENT TERMINAL (VISUALIZER) -->
+      <div class="settlement-terminal">
+        <div class="terminal-header">
+          <div class="terminal-title">
+            <span>⚡ Institutional Inter-Bank Settlement Terminal</span>
+          </div>
+          <div style="font-size: 0.8rem; color: #38bdf8; font-weight: 600;">
+            Deterministic Deadlock-Free Guarantee Active
+          </div>
+        </div>
+
+        <div class="nodes-grid">
+          <!-- Node 1: Debited Institution -->
+          <div class="node-box" id="term-src-node">
+            <div class="node-tag">DEBIT MEMBER (SOURCE)</div>
+            <div class="node-inst" id="term-src-name">J.P. Morgan Clearing Pool</div>
+            <div class="node-acc mono" id="term-src-num">ACC #---</div>
+            <div class="node-bal mono" id="term-src-bal">$---</div>
+          </div>
+
+          <!-- Connecting Settlement Channel -->
+          <div class="pipe-channel">
+            <div style="font-size: 0.68rem; font-weight: 700; color: #38bdf8; letter-spacing: 0.05em;">RTGS CLEARING</div>
+            <div class="pipe-line">
+              <div class="pipe-pulse"></div>
+            </div>
+            <div style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">ACID COMMIT</div>
+          </div>
+
+          <!-- Node 2: Credited Institution -->
+          <div class="node-box" id="term-dst-node">
+            <div class="node-tag">CREDIT MEMBER (DESTINATION)</div>
+            <div class="node-inst" id="term-dst-name">BNY Mellon Custody Pool</div>
+            <div class="node-acc mono" id="term-dst-num">ACC #---</div>
+            <div class="node-bal mono" id="term-dst-bal">$---</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPERATIONS WORKSPACE TABS -->
+      <div class="operations-card">
+        <div class="tabs-header">
+          <button class="tab-trigger active" onclick="showTab('tab-accounts', this)">Accounts Directory</button>
+          <button class="tab-trigger" onclick="showTab('tab-settlement', this)">Execute Settlement / Transfer</button>
+          <button class="tab-trigger" onclick="showTab('tab-members', this)">Institutional Members</button>
+          <button class="tab-trigger" onclick="showTab('tab-ledger', this)">Regulatory Audit Ledger</button>
+        </div>
+
+        <!-- TAB 1: ACCOUNTS DIRECTORY -->
+        <div id="tab-accounts" class="tab-body active">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <input type="text" id="acc-search-input" class="form-control" style="width: 350px;" placeholder="Filter accounts by number, institution, or type..." oninput="filterAccounts(this.value)">
+            <button class="btn btn-ghost" onclick="fetchData()">🔄 Refresh Directory</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Account Number</th>
+                  <th>Institutional Entity</th>
+                  <th>Account Type</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Audited Balance</th>
+                  <th>Opening Date</th>
+                  <th style="text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-accounts">
+                <tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);">Loading institutional accounts...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 2: EXECUTE SETTLEMENT -->
+        <div id="tab-settlement" class="tab-body">
+          <div style="max-width: 680px; margin: 0 auto;">
+            <div style="margin-bottom: 1.5rem; text-align: center;">
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-heading);">Initiate Inter-Bank Fund Transfer</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Executes within atomic Spring transaction boundary with deadlock-free pessimistic locking.</p>
+            </div>
+
+            <form onsubmit="handleSettlementSubmit(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Debited Source Account</label>
+                  <select id="set-src-acc" class="form-control" required></select>
+                </div>
+                <div class="form-group">
+                  <label>Credited Target Account</label>
+                  <select id="set-dst-acc" class="form-control" required></select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Settlement Amount ($ USD)</label>
+                  <input type="number" step="0.01" min="0.01" id="set-amt" class="form-control mono" placeholder="10000.00" required>
+                </div>
+                <div class="form-group">
+                  <label>Clearing Reference / Memo</label>
+                  <input type="text" id="set-memo" class="form-control" placeholder="FEDWIRE-CHIPS-SETTLE-#9021">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; justify-content: center; font-size: 0.95rem; margin-top: 1rem;">
+                Confirm & Clear Inter-Bank Transfer ➔
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 3: MEMBERS -->
+        <div id="tab-members" class="tab-body">
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Member ID</th>
+                  <th>Institutional Name</th>
+                  <th>Contact Email</th>
+                  <th>Direct Wire Line</th>
+                  <th>Onboarded Date</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-members">
+                <tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">Loading members...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 4: AUDIT LEDGER -->
+        <div id="tab-ledger" class="tab-body">
+          <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+            <select id="ledger-acc-picker" class="form-control" style="width: 320px;" onchange="loadLedgerStatement()">
+              <option value="">-- Choose Account to Inspect Statement --</option>
+            </select>
+            <button class="btn btn-ghost" onclick="loadLedgerStatement()">Fetch Ledger</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference Hash</th>
+                  <th>Movement Type</th>
+                  <th>Amount</th>
+                  <th>Balance Post-State</th>
+                  <th>Counterparty Routing</th>
+                  <th>Description</th>
+                  <th>UTC Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-ledger">
+                <tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);">Select an account above to inspect statement records.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL: ONBOARD ENTITY -->
+  <div id="modal-onboard" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,37,64,0.6); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:16px; width:100%; max-width:500px; padding:2rem; box-shadow:0 25px 50px rgba(0,0,0,0.3);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <h3 style="font-size:1.15rem; font-weight:800; color:var(--text-heading);">Onboard Institutional Entity</h3>
+        <button onclick="closeOnboardModal()" style="border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <form onsubmit="handleOnboardSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Institution First / Legal Name</label>
+            <input type="text" id="ob-first" class="form-control" placeholder="J.P. Morgan" required>
+          </div>
+          <div class="form-group">
+            <label>Department / Entity</label>
+            <input type="text" id="ob-last" class="form-control" placeholder="Securities LLC" required>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label>Institutional Official Email</label>
+          <input type="email" id="ob-email" class="form-control" placeholder="settlements@jpmorgan.com" required>
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label>Authorized Fedwire Phone</label>
+          <input type="tel" id="ob-phone" class="form-control" placeholder="+1-212-555-0100" required>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+          <button type="button" class="btn btn-ghost" onclick="closeOnboardModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Complete Onboarding</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: OPEN ACCOUNT -->
+  <div id="modal-account" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,37,64,0.6); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:16px; width:100%; max-width:500px; padding:2rem; box-shadow:0 25px 50px rgba(0,0,0,0.3);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <h3 style="font-size:1.15rem; font-weight:800; color:var(--text-heading);">Open Tier-1 Custody Account</h3>
+        <button onclick="closeAccountModal()" style="border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <form onsubmit="handleAccountSubmit(event)">
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label>Select Member Entity</label>
+          <select id="acc-owner-uid" class="form-control" required></select>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label>Account Class</label>
+          <select id="acc-class" class="form-control" required>
+            <option value="CHECKING">Operational Clearing (CHECKING)</option>
+            <option value="SAVINGS">Reserve Liquidity Vault (SAVINGS)</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label>Initial Opening Reserve Deposit ($ USD)</label>
+          <input type="number" step="0.01" min="0" id="acc-init-deposit" class="form-control mono" value="50000.00" required>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+          <button type="button" class="btn btn-ghost" onclick="closeAccountModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Open Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toast-shelf"></div>
+
+  <!-- SCRIPTS -->
+  <script>
+    const API = '/api/v1';
+
+    let users = [];
+    let accounts = [];
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showTab(tabId, btn) {
+      document.querySelectorAll('.tab-trigger').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-body').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function openOnboardModal() { document.getElementById('modal-onboard').style.display = 'flex'; }
+    function closeOnboardModal() { document.getElementById('modal-onboard').style.display = 'none'; }
+    function openAccountModal() { populateDropdowns(); document.getElementById('modal-account').style.display = 'flex'; }
+    function closeAccountModal() { document.getElementById('modal-account').style.display = 'none'; }
+
+    function toast(msg, isErr = false) {
+      const s = document.getElementById('toast-shelf');
+      const d = document.createElement('div');
+      d.className = `toast-msg ${isErr ? 'error' : ''}`;
+      d.innerHTML = `<span>${msg}</span>`;
+      s.appendChild(d);
+      setTimeout(() => {
+        d.style.opacity = '0';
+        d.style.transform = 'translateX(20px)';
+        d.style.transition = 'all 0.25s';
+        setTimeout(() => d.remove(), 250);
+      }, 4000);
+    }
+
+    function copyToClipboard(val) {
+      navigator.clipboard.writeText(val);
+      toast(`Copied ${val} to clipboard`);
+    }
+
+    async function fetchData() {
+      try {
+        const uRes = await fetch(`${API}/users`);
+        const uData = await uRes.json();
+        if (uData.success) {
+          users = uData.data || [];
+          document.getElementById('stat-user-count').textContent = users.length;
+        }
+
+        let accList = [];
+        let totalVault = 0;
+        for (const u of users) {
+          const aRes = await fetch(`${API}/accounts/user/${u.id}`);
+          const aData = await aRes.json();
+          if (aData.success) {
+            accList.push(...aData.data);
+            aData.data.forEach(a => totalVault += Number(a.balance));
+          }
+        }
+
+        accounts = accList;
+        document.getElementById('stat-acc-count').textContent = accounts.length;
+        document.getElementById('stat-acc-badge').textContent = `${accounts.length} Accounts`;
+
+        const formattedBal = '$' + totalVault.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('stat-vault').textContent = formattedBal;
+        document.getElementById('hero-vault-balance').textContent = formattedBal;
+
+        renderAccountsTable(accounts);
+        renderMembersTable(users);
+        populateDropdowns();
+        updateTerminalPreview();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderAccountsTable(accs) {
+      const tb = document.getElementById('tbl-accounts');
+      if (accs.length === 0) {
+        tb.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">No accounts found. Click "⚡ Run Inter-Bank Settlement Demo" above to auto-populate.</td></tr>`;
+        return;
+      }
+
+      tb.innerHTML = accs.map(a => `
+        <tr>
+          <td>
+            <div class="copy-chip" onclick="copyToClipboard('${a.accountNumber}')" title="Click to copy">
+              <span class="mono font-semibold" style="font-weight:700;">${a.accountNumber}</span>
+              <span>📋</span>
+            </div>
+          </td>
+          <td style="font-weight: 700;">${a.ownerName}</td>
+          <td><span class="status-badge ${a.accountType === 'SAVINGS' ? 'savings' : 'checking'}">${a.accountType}</span></td>
+          <td><span class="status-badge active">● ${a.status}</span></td>
+          <td style="text-align: right; font-weight: 800;" class="mono">$${Number(a.balance).toFixed(2)}</td>
+          <td style="font-size: 0.82rem; color: var(--text-muted);">${new Date(a.createdAt).toLocaleDateString()}</td>
+          <td style="text-align: center;">
+            <button class="btn btn-ghost" style="padding: 0.3rem 0.7rem; font-size: 0.8rem;" onclick="quickSettle('${a.accountNumber}')">Transfer</button>
+            <button class="btn btn-ghost" style="padding: 0.3rem 0.7rem; font-size: 0.8rem;" onclick="inspectLedger('${a.accountNumber}')">Ledger</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderMembersTable(usrs) {
+      const tb = document.getElementById('tbl-members');
+      if (usrs.length === 0) {
+        tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem; color: var(--text-muted);">No members registered yet.</td></tr>`;
+        return;
+      }
+
+      tb.innerHTML = usrs.map(u => `
+        <tr>
+          <td class="mono font-semibold">#MEM-${u.id}</td>
+          <td style="font-weight: 700;">${u.firstName} ${u.lastName}</td>
+          <td>${u.email}</td>
+          <td class="mono">${u.phoneNumber}</td>
+          <td style="color: var(--text-muted); font-size: 0.82rem;">${new Date(u.createdAt).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    function populateDropdowns() {
+      // 1. Member owner select
+      const uidSelect = document.getElementById('acc-owner-uid');
+      uidSelect.innerHTML = '<option value="">-- Choose Member Entity --</option>';
+      users.forEach(u => {
+        uidSelect.innerHTML += `<option value="${u.id}">${u.firstName} ${u.lastName} (${u.email})</option>`;
+      });
+
+      // 2. Transfer dropdowns
+      const src = document.getElementById('set-src-acc');
+      const dst = document.getElementById('set-dst-acc');
+      const picker = document.getElementById('ledger-acc-picker');
+
+      let opts = '<option value="">-- Select Account --</option>';
+      accounts.forEach(a => {
+        opts += `<option value="${a.accountNumber}">${a.accountNumber} - ${a.ownerName} ($${Number(a.balance).toFixed(2)})</option>`;
+      });
+
+      if (src) src.innerHTML = opts;
+      if (dst) dst.innerHTML = opts;
+      if (picker) {
+        const cur = picker.value;
+        picker.innerHTML = '<option value="">-- Choose Account to Inspect Statement --</option>' + opts;
+        if (cur) picker.value = cur;
+      }
+    }
+
+    function updateTerminalPreview() {
+      if (accounts.length >= 2) {
+        document.getElementById('term-src-name').textContent = accounts[0].ownerName;
+        document.getElementById('term-src-num').textContent = `ACC #${accounts[0].accountNumber}`;
+        document.getElementById('term-src-bal').textContent = `$${Number(accounts[0].balance).toFixed(2)}`;
+
+        document.getElementById('term-dst-name').textContent = accounts[1].ownerName;
+        document.getElementById('term-dst-num').textContent = `ACC #${accounts[1].accountNumber}`;
+        document.getElementById('term-dst-bal').textContent = `$${Number(accounts[1].balance).toFixed(2)}`;
+      }
+    }
+
+    function filterAccounts(query) {
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        renderAccountsTable(accounts);
+        return;
+      }
+      const filtered = accounts.filter(a =>
+        a.accountNumber.includes(q) ||
+        a.ownerName.toLowerCase().includes(q) ||
+        a.accountType.toLowerCase().includes(q)
+      );
+      renderAccountsTable(filtered);
+    }
+
+    async function handleOnboardSubmit(e) {
+      e.preventDefault();
+      const body = {
+        firstName: document.getElementById('ob-first').value.trim(),
+        lastName: document.getElementById('ob-last').value.trim(),
+        email: document.getElementById('ob-email').value.trim(),
+        phoneNumber: document.getElementById('ob-phone').value.trim()
+      };
+
+      try {
+        const res = await fetch(`${API}/users`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(body)
+        });
+        const d = await res.json();
+        if (res.ok && d.success) {
+          toast(`Entity "${d.data.firstName} ${d.data.lastName}" successfully onboarded.`);
+          closeOnboardModal();
+          fetchData();
+        } else {
+          toast(d.message || d.error || 'Onboarding rejected', true);
+        }
+      } catch (err) {
+        toast('Connection error', true);
+      }
+    }
+
+    async function handleAccountSubmit(e) {
+      e.preventDefault();
+      const body = {
+        userId: parseInt(document.getElementById('acc-owner-uid').value),
+        accountType: document.getElementById('acc-class').value,
+        initialDeposit: parseFloat(document.getElementById('acc-init-deposit').value)
+      };
+
+      try {
+        const res = await fetch(`${API}/accounts`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(body)
+        });
+        const d = await res.json();
+        if (res.ok && d.success) {
+          toast(`Account ${d.data.accountNumber} opened with $${d.data.balance.toFixed(2)} reserve.`);
+          closeAccountModal();
+          fetchData();
+        } else {
+          toast(d.message || d.error || 'Account opening failed', true);
+        }
+      } catch (err) {
+        toast('Connection error', true);
+      }
+    }
+
+    async function handleSettlementSubmit(e) {
+      e.preventDefault();
+      const src = document.getElementById('set-src-acc').value;
+      const dst = document.getElementById('set-dst-acc').value;
+      const amt = parseFloat(document.getElementById('set-amt').value);
+      const memo = document.getElementById('set-memo').value;
+
+      if (src === dst) {
+        toast('Source and destination accounts must be distinct.', true);
+        return;
+      }
+
+      // Flash terminal nodes
+      flashTerminal();
+
+      try {
+        const res = await fetch(`${API}/transactions/transfer`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ sourceAccountNumber: src, targetAccountNumber: dst, amount: amt, description: memo || 'Inter-Bank Clearing' })
+        });
+        const d = await res.json();
+        if (res.ok && d.success) {
+          toast(`⚡ RTGS Cleared! $${amt.toFixed(2)} settled. Reference: ${d.data.transactionReference}`);
+          document.getElementById('set-amt').value = '';
+          fetchData();
+        } else {
+          toast(d.message || d.error || 'Clearing rejected by core engine', true);
+        }
+      } catch (err) {
+        toast('Network connectivity error', true);
+      }
+    }
+
+    function flashTerminal() {
+      const sn = document.getElementById('term-src-node');
+      const dn = document.getElementById('term-dst-node');
+      if (sn) sn.classList.add('highlight');
+      setTimeout(() => { if (dn) dn.classList.add('highlight'); }, 400);
+      setTimeout(() => {
+        if (sn) sn.classList.remove('highlight');
+        if (dn) dn.classList.remove('highlight');
+      }, 1400);
+    }
+
+    function quickSettle(accNum) {
+      showTab('tab-settlement', document.querySelectorAll('.tab-trigger')[1]);
+      document.getElementById('set-src-acc').value = accNum;
+    }
+
+    function inspectLedger(accNum) {
+      showTab('tab-ledger', document.querySelectorAll('.tab-trigger')[3]);
+      document.getElementById('ledger-acc-picker').value = accNum;
+      loadLedgerStatement();
+    }
+
+    async function loadLedgerStatement() {
+      const acc = document.getElementById('ledger-acc-picker').value;
+      const tb = document.getElementById('tbl-ledger');
+      if (!acc) {
+        tb.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);">Please choose an account to inspect.</td></tr>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/transactions/account/${acc}?page=0&size=50`);
+        const d = await res.json();
+        if (res.ok && d.success) {
+          const list = d.data.content || [];
+          if (list.length === 0) {
+            tb.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);">No ledger entries found for account ${acc}.</td></tr>`;
+            return;
+          }
+
+          tb.innerHTML = list.map(t => {
+            const flow = t.transactionType === 'TRANSFER'
+              ? `${t.sourceAccountNumber} ➔ ${t.targetAccountNumber}`
+              : (t.sourceAccountNumber || t.targetAccountNumber || '-');
+
+            return `
+              <tr>
+                <td><span class="mono" style="font-weight:700; font-size:0.78rem;">${t.transactionReference}</span></td>
+                <td><span class="status-badge ${t.transactionType === 'DEPOSIT' ? 'active' : 'checking'}">${t.transactionType}</span></td>
+                <td class="mono font-semibold" style="font-weight:800;">$${Number(t.amount).toFixed(2)}</td>
+                <td class="mono" style="color:var(--text-muted);">$${t.balanceAfter != null ? Number(t.balanceAfter).toFixed(2) : '-'}</td>
+                <td class="mono" style="font-size:0.8rem;">${flow}</td>
+                <td>${t.description || '-'}</td>
+                <td style="font-size:0.78rem; color:var(--text-muted);">${new Date(t.timestamp).toUTCString()}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        toast('Failed to load ledger', true);
+      }
+    }
+
+    // INSTITUTIONAL LIVE DEMO (JPMorgan -> BNY Mellon)
+    async function runInstitutionalSimulation() {
+      toast("🚀 Initializing Tier-1 Institutional Clearance Demo (J.P. Morgan ➔ BNY Mellon)...");
+      try {
+        const ts = Date.now().toString().slice(-4);
+        
+        // 1. Create JPMorgan entity
+        const c1Res = await fetch(`${API}/users`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ firstName: "JPMorgan", lastName: `Treasury #${ts}`, email: `settlement.jpm${ts}@jpmorgan.com`, phoneNumber: "+1-212-270-6000" })
+        });
+        const c1 = await c1Res.json();
+
+        // 2. Create BNY Mellon entity
+        const c2Res = await fetch(`${API}/users`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ firstName: "BNY Mellon", lastName: `Custody #${ts}`, email: `custody.bny${ts}@bnymellon.com`, phoneNumber: "+1-212-495-1784" })
+        });
+        const c2 = await c2Res.json();
+
+        if (!c1.success || !c2.success) {
+          toast("Simulation: Entity initialization error", true);
+          return;
+        }
+
+        // 3. Open accounts with institutional reserves
+        const a1Res = await fetch(`${API}/accounts`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ userId: c1.data.id, accountType: "CHECKING", initialDeposit: 500000.00 })
+        });
+        const a1 = await a1Res.json();
+
+        const a2Res = await fetch(`${API}/accounts`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ userId: c2.data.id, accountType: "SAVINGS", initialDeposit: 150000.00 })
+        });
+        const a2 = await a2Res.json();
+
+        await fetchData();
+        scrollToSection('portal-view');
+        flashTerminal();
+
+        await new Promise(r => setTimeout(r, 600));
+
+        // 4. Settle $125,000 inter-bank clearance
+        const trfRes = await fetch(`${API}/transactions/transfer`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            sourceAccountNumber: a1.data.accountNumber,
+            targetAccountNumber: a2.data.accountNumber,
+            amount: 125000.00,
+            description: `FEDWIRE-CHIPS-SETTLEMENT-JPM-BNY-${ts}`
+          })
+        });
+        const trf = await trfRes.json();
+
+        if (trf.success) {
+          toast(`🏛️ SETTLED: $125,000.00 transferred from J.P. Morgan to BNY Mellon! Ref: ${trf.data.transactionReference}`);
+          await fetchData();
+        }
+      } catch (err) {
+        toast("Simulation error", true);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', fetchData);
+  </script>
+</body>
+</html>

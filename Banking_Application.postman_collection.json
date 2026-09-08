@@ -1,0 +1,578 @@
+{
+	"info": {
+		"_postman_id": "7f8b91a2-63b1-46c5-84cb-34c76b4ef821",
+		"name": "Banking Application Automated Test Suite",
+		"description": "Automated contract and business logic verification test collection for the Spring Boot Banking Application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Customer Management",
+			"item": [
+				{
+					"name": "Create Customer 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Customer registered successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"    pm.expect(jsonData.data.id).to.be.a('number');",
+									"    pm.collectionVariables.set(\"user1_id\", jsonData.data.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Alice\",\n    \"lastName\": \"Smith\",\n    \"email\": \"alice.smith.{{$timestamp}}@example.com\",\n    \"phoneNumber\": \"+1-555-0199\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Customer 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Customer 2 registered successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"    pm.collectionVariables.set(\"user2_id\", jsonData.data.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Bob\",\n    \"lastName\": \"Jones\",\n    \"email\": \"bob.jones.{{$timestamp}}@example.com\",\n    \"phoneNumber\": \"+1-555-0288\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					}
+				},
+				{
+					"name": "Negative Test: Invalid Email Validation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Validation error map contains email error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.validationErrors).to.have.property('email');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Invalid\",\n    \"lastName\": \"User\",\n    \"email\": \"invalid-email-format\",\n    \"phoneNumber\": \"+1-555-0000\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Account Management",
+			"item": [
+				{
+					"name": "Open Account for Customer 1 ($1000)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Account created with correct balance\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.balance).to.eql(1000.00);",
+									"    pm.expect(jsonData.data.status).to.eql(\"ACTIVE\");",
+									"    pm.collectionVariables.set(\"account1_num\", jsonData.data.accountNumber);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{user1_id}},\n    \"accountType\": \"SAVINGS\",\n    \"initialDeposit\": 1000.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						}
+					}
+				},
+				{
+					"name": "Open Account for Customer 2 ($200)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Account 2 created successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.balance).to.eql(200.00);",
+									"    pm.collectionVariables.set(\"account2_num\", jsonData.data.accountNumber);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{user2_id}},\n    \"accountType\": \"CHECKING\",\n    \"initialDeposit\": 200.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Account Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Account details match\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.accountNumber).to.eql(pm.collectionVariables.get(\"account1_num\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/{{account1_num}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"{{account1_num}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Transactions & Transfers",
+			"item": [
+				{
+					"name": "Deposit $500 to Account 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"New balance is 1500.00\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.balanceAfter).to.eql(1500.00);",
+									"    pm.expect(jsonData.data.transactionType).to.eql(\"DEPOSIT\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountNumber\": \"{{account1_num}}\",\n    \"amount\": 500.00,\n    \"description\": \"Paycheck Direct Deposit\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions/deposit",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"deposit"
+							]
+						}
+					}
+				},
+				{
+					"name": "Withdraw $200 from Account 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"New balance is 1300.00\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.balanceAfter).to.eql(1300.00);",
+									"    pm.expect(jsonData.data.transactionType).to.eql(\"WITHDRAWAL\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountNumber\": \"{{account1_num}}\",\n    \"amount\": 200.00,\n    \"description\": \"ATM Cash Withdrawal\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions/withdraw",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"withdraw"
+							]
+						}
+					}
+				},
+				{
+					"name": "Negative Test: Overdraft / Insufficient Balance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Error indicates Insufficient Funds\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.eql(\"Insufficient Funds\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountNumber\": \"{{account1_num}}\",\n    \"amount\": 50000.00,\n    \"description\": \"Excessive Withdrawal Attempt\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions/withdraw",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"withdraw"
+							]
+						}
+					}
+				},
+				{
+					"name": "Inter-Bank Transfer $300 (Account 1 -> Account 2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Source balance deducted to 1000.00\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.balanceAfter).to.eql(1000.00);",
+									"    pm.expect(jsonData.data.transactionType).to.eql(\"TRANSFER\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sourceAccountNumber\": \"{{account1_num}}\",\n    \"targetAccountNumber\": \"{{account2_num}}\",\n    \"amount\": 300.00,\n    \"description\": \"Rent split payment\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions/transfer",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"transfer"
+							]
+						}
+					}
+				},
+				{
+					"name": "Verify Account 2 Balance Received Transfer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Account 2 has received $300 (Total = $500.00)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.balance).to.eql(500.00);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/accounts/{{account2_num}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"{{account2_num}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Account 1 Statement History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Contains transaction records\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.content.length).to.be.at.least(3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/transactions/account/{{account1_num}}?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"account",
+								"{{account1_num}}"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "user1_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user2_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "account1_num",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "account2_num",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
+

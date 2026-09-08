@@ -58,3 +58,7 @@ Desktop.ini
 
 ### Docker ###
 .docker/
+
+### Personal Interview & Guide Docs ###
+interview_guide.html
+*.pdf
